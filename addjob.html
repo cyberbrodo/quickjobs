@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Job | QuickJobs</title>
+    <link rel="stylesheet" href="addjob.css">
+</head>
+<body>
+
+<div class="job-form">
+    <h2>Add Job Vacancy</h2>
+
+    <input type="text" id="shop" placeholder="Shop / Company Name">
+    <input type="text" id="title" placeholder="Job Title (eg: Sales Boy)">
+
+    <select id="category">
+        <option value="">Select Category</option>
+        <option value="Dress Shop">Dress Shop</option>
+        <option value="Hotel">Hotel</option>
+        <option value="IT Jobs">IT Jobs</option>
+        <option value="Driver">Driver</option>
+        <option value="Office Staff">Office Staff</option>
+        <option value="Delivery">Delivery</option>
+        <option value="Sales">Sales</option>
+        <option value="Security">Security</option>
+    </select>
+
+    <input type="text" id="age" placeholder="Age limit (eg: 18-35)">
+    <input type="text" id="location" placeholder="Location">
+    <input type="text" id="salary" placeholder="Salary (eg: 10000 - 15000)">
+
+    <input type="text" id="ownerName" disabled>
+    <input type="email" id="ownerEmail" placeholder="Email">
+    <input type="tel" id="ownerPhone" placeholder="Phone">
+
+    <button onclick="addJob()">Add Job</button>
+</div>
+
+<script>
+let user = localStorage.getItem("username");
+if(!user){
+    window.location.href = "login.html";
+}
+
+// autofill owner
+document.getElementById("ownerName").value = user;
+document.getElementById("ownerEmail").value = localStorage.getItem("email") || "";
+document.getElementById("ownerPhone").value = localStorage.getItem("phone") || "";
+
+function addJob(){
+    let shop = document.getElementById("shop").value.trim();
+    let title = document.getElementById("title").value.trim();
+    let category = document.getElementById("category").value;
+    let age = document.getElementById("age").value.trim();     // ✅ FIX
+    let location = document.getElementById("location").value.trim();
+    let salary = document.getElementById("salary").value.trim();
+    let phone = document.getElementById("ownerPhone").value.trim();
+
+    if(!shop || !title || !category || !location || !salary){
+        alert("Please fill all required fields");
+        return;
+    }
+
+    let job = {
+        id: Date.now(),
+        shop: shop,
+        title: title,
+        category: category,
+        age: age,
+        location: location,
+        salary: salary,
+        owner: user,
+        phone: phone
+    };
+
+    let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+    jobs.push(job);
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+
+    alert("Job added successfully ✅");
+    window.location.href = "home.html";
+}
+</script>
+
+</body>
+</html>

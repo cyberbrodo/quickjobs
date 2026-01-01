@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QuickJobs | Home</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Quick<span>Jobs</span></div>
+
+    <div class="search-box">
+        <input 
+            type="text"
+            class="search"
+            id="searchInput"
+            placeholder="Search jobs..."
+            onkeyup="showSuggestions()"
+            onkeydown="goCategory(event)"
+        >
+        <div id="suggestions"></div>
+    </div>
+
+    <div class="profile">
+        <button class="profile-btn" onclick="toggleProfile()">
+            <span id="profileName"></span> ⌄
+        </button>
+        <div class="dropdown" id="profileMenu">
+            <a href="profile.html">My Profile</a>
+            <a href="addjob.html">Add Job</a>
+            <a href="#" onclick="logout()">Logout</a>
+        </div>
+    </div>
+</header>
+
+<section class="welcome">
+    <h2 id="welcomeText"></h2>
+    <p>Find the best jobs near you</p>
+</section>
+
+<section class="categories">
+    <a href="dress.html" class="card">Dress Shop</a>
+    <a href="hotel.html" class="card">Hotel</a>
+    <a href="it.html" class="card">IT Jobs</a>
+    <a href="driver.html" class="card">Driver</a>
+    <a href="office.html" class="card">Office Staff</a>
+    <a href="delivery.html" class="card">Delivery</a>
+    <a href="sales.html" class="card">Sales</a>
+    <a href="security.html" class="card">Security</a>
+</section>
+
+<!-- ✅ ALL JOB LIST ADDED -->
+<section class="job-list" id="jobList"></section>
+
+<script>
+// LOGIN CHECK
+let user = localStorage.getItem("username");
+if(!user){
+    window.location.href = "login.html";
+}
+
+document.getElementById("welcomeText").innerText = "Welcome, " + user;
+document.getElementById("profileName").innerText = user;
+
+// PROFILE MENU
+function toggleProfile(){
+    document.getElementById("profileMenu").classList.toggle("show");
+}
+
+function logout(){
+    localStorage.removeItem("username");
+    window.location.href = "login.html";
+}
+
+// CATEGORY DATA
+let categories = [
+    { name:"Dress Shop", page:"dress.html" },
+    { name:"Hotel", page:"hotel.html" },
+    { name:"IT Jobs", page:"it.html" },
+    { name:"Driver", page:"driver.html" },
+    { name:"Office Staff", page:"office.html" },
+    { name:"Delivery", page:"delivery.html" },
+    { name:"Sales", page:"sales.html" },
+    { name:"Security", page:"security.html" }
+];
+
+// ===== ALL JOB LIST =====
+let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+let jobList = document.getElementById("jobList");
+
+function showAllJobs(list){
+    jobList.innerHTML = "";
+
+    if(list.length === 0){
+        jobList.innerHTML = "<p class='no-job'>No jobs available ❌</p>";
+        return;
+    }
+
+    list.forEach(job => {
+        let div = document.createElement("div");
+        div.className = "job-card";
+
+        div.innerHTML = `
+            <h3>${job.shop}</h3>
+            <p><b>Job:</b> ${job.title}</p>
+            <p><b>Category:</b> ${job.category}</p>
+            <p><b>Location:</b> ${job.location}</p>
+            <p><b>Salary:</b> ${job.salary}</p>
+            <a class="whatsapp" href="https://wa.me/91${job.phone}" target="_blank">
+                📲 ${job.phone}
+            </a>
+        `;
+        jobList.appendChild(div);
+    });
+}
+
+// FIRST LOAD
+showAllJobs(jobs);
+
+// SEARCH + SUGGESTION
+function showSuggestions(){
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    let box = document.getElementById("suggestions");
+    box.innerHTML = "";
+
+    if(input === ""){
+        box.style.display = "none";
+        showAllJobs(jobs);
+        return;
+    }
+
+    let result = categories.filter(c =>
+        c.name.toLowerCase().includes(input)
+    );
+
+    result.forEach(cat => {
+        let div = document.createElement("div");
+        div.className = "suggestion-item";
+        div.innerText = cat.name;
+        div.onclick = () => window.location.href = cat.page;
+        box.appendChild(div);
+    });
+
+    box.style.display = result.length ? "block" : "none";
+
+    let filteredJobs = jobs.filter(job =>
+        job.title.toLowerCase().includes(input) ||
+        job.category.toLowerCase().includes(input) ||
+        job.location.toLowerCase().includes(input)
+    );
+
+    showAllJobs(filteredJobs);
+}
+
+// ENTER PRESS
+function goCategory(e){
+    if(e.key === "Enter"){
+        let value = searchInput.value.toLowerCase();
+        let found = categories.find(c =>
+            c.name.toLowerCase().includes(value)
+        );
+        if(found){
+            window.location.href = found.page;
+        }
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+*{
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+/* Page */
+body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f5f7fa;
+    padding:15px;
+}
+
+/* Profile Box */
+.profile-box{
+    width:100%;
+    max-width:420px;
+    padding:30px;
+    border-radius:18px;
+}
+
+/* Headings */
+.profile-box h2{
+    text-align:center;
+    margin-bottom:20px;
+    color:#0a3d62;
+    font-size:22px;
+}
+
+/* Inputs */
+label{
+    font-size:15px;
+    margin-bottom:6px;
+    display:block;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    margin-bottom:15px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:15px;
+}
+
+input:disabled{
+    background:#f0f0f0;
+}
+
+/* Button */
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:30px;
+    background:#1dd1a1;
+    font-weight:bold;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#17b593;
+}
+
+/* Divider */
+hr{
+    margin:30px 0;
+    border:none;
+    height:1px;
+    background:#ddd;
+}
+
+/* Job Card */
+.job{
+    background:#fff;
+    padding:18px;
+    margin-bottom:15px;
+    border-radius:14px;
+    box-shadow:0 8px 16px rgba(0,0,0,0.08);
+}
+
+.job b{
+    display:block;
+    margin-bottom:6px;
+    color:#0a3d62;
+    font-size:16px;
+}
+
+.job p{
+    font-size:14px;
+    margin:4px 0;
+}
+
+/* Job Buttons */
+.job-actions{
+    display:flex;
+    gap:10px;
+    margin-top:12px;
+}
+
+.job-actions button{
+    flex:1;
+    padding:12px;
+    border-radius:20px;
+    font-size:14px;
+}
+
+/* Edit */
+.job-actions .edit{
+    background:#54a0ff;
+    color:white;
+}
+.job-actions .edit:hover{
+    background:#2e86de;
+}
+
+/* Delete */
+.job-actions .delete{
+    background:#ff4d4d;
+    color:white;
+}
+.job-actions .delete:hover{
+    background:#e84141;
+}
+
+/* ========================= */
+/* 💻 LAPTOP & DESKTOP */
+/* ========================= */
+@media (min-width: 768px){
+
+    .profile-box{
+        max-width:520px;
+        padding:25px;
+    }
+
+    .profile-box h2{
+        font-size:20px;
+    }
+
+    input{
+        padding:12px;
+        font-size:14px;
+    }
+
+    button{
+        padding:13px;
+        font-size:14px;
+    }
+
+    .job{
+        padding:15px;
+    }
+
+    .job b{
+        font-size:15px;
+    }
+
+    .job p{
+        font-size:13px;
+    }
+
+    .job-actions button{
+        padding:10px;
+        font-size:13px;
+    }
+}

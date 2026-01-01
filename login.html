@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QuickJobs Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+<div class="login-card">
+    <h1>Quick<span>Jobs.</span></h1>
+    <p class="tagline">Empowering your career</p>
+
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+
+    <button onclick="login()">Login →</button>
+
+    <div class="links">
+        <a href="#" onclick="forgotPassword()">Forgot my password</a><br>
+        <a href="#" onclick="registerUser()">Register a New User</a>
+    </div>
+</div>
+
+<script>
+// LOGIN
+function login(){
+    let username = document.getElementById("username").value.trim();
+    let password = document.getElementById("password").value.trim();
+
+    if(username === "" || password === ""){
+        alert("Enter username and password");
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    let user = users.find(u => u.username === username);
+
+    if(user){
+        if(user.password === password){
+            localStorage.setItem("username", username);
+            alert("Login successful ✅");
+            window.location.href = "home.html";
+        }else{
+            alert("Wrong password ❌");
+        }
+    }else{
+        alert("Account not found ❌ Please register");
+    }
+}
+
+// REGISTER
+function registerUser(){
+    let username = prompt("Enter new username:");
+    let password = prompt("Enter password:");
+
+    if(!username || !password){
+        alert("Registration cancelled");
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // 🔴 SAME USER CHECK (case-insensitive)
+    let exists = users.find(
+        u => u.username.toLowerCase() === username.toLowerCase()
+    );
+
+    if(exists){
+        alert("Username already exists ❌\nPlease choose another name");
+        return;
+    }
+
+    users.push({ username, password });
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Account created successfully ✅");
+}
+
+// FORGOT PASSWORD
+function forgotPassword(){
+    let username = prompt("Enter your username:");
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    let user = users.find(u => u.username === username);
+
+    if(user){
+        alert("Your password is: " + user.password);
+    }else{
+        alert("User not found ❌");
+    }
+}
+</script>
+
+</body>
+</html>

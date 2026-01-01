@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delivery Jobs | QuickJobs</title>
+    <link rel="stylesheet" href="delivery.css">
+</head>
+<body>
+
+<h2 class="page-title">Delivery Job Vacancies</h2>
+
+<div class="job-list" id="jobList"></div>
+
+<script>
+let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+let jobList = document.getElementById("jobList");
+
+// ✅ EXACT MATCH — NO SPACE
+let deliveryJobs = jobs.filter(job => job.category === "Delivery");
+
+if (deliveryJobs.length === 0) {
+    jobList.innerHTML =
+        "<p style='text-align:center;'>No Delivery jobs available ❌</p>";
+}
+
+deliveryJobs.forEach(job => {
+    let div = document.createElement("div");
+    div.className = "job-card";
+
+    div.innerHTML = `
+        <h3>${job.shop}</h3>
+        <p><strong>Job:</strong> ${job.title}</p>
+        <p><strong>Location:</strong> ${job.location}</p>
+        <p><strong>Salary:</strong> ₹${job.salary}</p>
+
+        <div class="owner">
+            <p><strong>Owner:</strong> ${job.owner}</p>
+            <a class="whatsapp"
+               href="https://wa.me/91${job.phone}"
+               target="_blank">
+               WhatsApp
+            </a>
+        </div>
+    `;
+
+    jobList.appendChild(div);
+});
+</script>
+
+</body>
+</html>

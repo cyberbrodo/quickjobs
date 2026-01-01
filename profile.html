@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile | QuickJobs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+
+<div class="profile-box">
+
+    <h2>My Profile</h2>
+
+    <label>Name</label>
+    <input type="text" id="name" disabled>
+
+    <label>Email</label>
+    <input type="email" id="email">
+
+    <label>Phone</label>
+    <input type="tel" id="phone">
+
+    <button onclick="saveProfile()">Save Details</button>
+
+    <hr>
+
+    <h2>My Added Jobs</h2>
+    <div id="jobs"></div>
+
+</div>
+
+<script>
+// 🔐 LOGIN CHECK
+let username = localStorage.getItem("username");
+if(!username){
+    window.location.href = "login.html";
+}
+
+// LOAD PROFILE
+document.getElementById("name").value = username;
+document.getElementById("email").value = localStorage.getItem("email") || "";
+document.getElementById("phone").value = localStorage.getItem("phone") || "";
+
+// SAVE PROFILE
+function saveProfile(){
+    localStorage.setItem("email", email.value);
+    localStorage.setItem("phone", phone.value);
+    alert("Profile updated ✅");
+}
+
+// LOAD JOBS
+let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+let box = document.getElementById("jobs");
+
+renderJobs();
+
+// 🔁 RENDER JOBS
+function renderJobs(){
+    box.innerHTML = "";
+    let myJobs = jobs.filter(j => j.owner === username);
+
+    if(myJobs.length === 0){
+        box.innerHTML = "<p style='text-align:center'>No jobs added yet</p>";
+        return;
+    }
+
+    myJobs.forEach(job => {
+        let div = document.createElement("div");
+        div.className = "job";
+
+        div.innerHTML = `
+            <div id="view-${job.id}">
+                <b>${job.title}</b>
+                <p>Shop: ${job.shop}</p>
+                <p>Category: ${job.category}</p>
+                <p>Location: ${job.location}</p>
+                <p>Salary: ₹${job.salary}</p>
+
+                <div class="job-actions">
+                    <button class="edit" onclick="startEdit(${job.id})">Edit</button>
+                    <button class="delete" onclick="deleteJob(${job.id})">Delete</button>
+                </div>
+            </div>
+
+            <div id="edit-${job.id}" style="display:none">
+                <input id="title-${job.id}" value="${job.title}">
+                <input id="shop-${job.id}" value="${job.shop}">
+                <input id="location-${job.id}" value="${job.location}">
+                <input id="salary-${job.id}" value="${job.salary}">
+
+                <div class="job-actions">
+                    <button onclick="saveJob(${job.id})">Save</button>
+                    <button class="delete" onclick="cancelEdit(${job.id})">Cancel</button>
+                </div>
+            </div>
+        `;
+
+        box.appendChild(div);
+    });
+}
+
+// ✏️ START EDIT
+function startEdit(id){
+    document.getElementById("view-"+id).style.display = "none";
+    document.getElementById("edit-"+id).style.display = "block";
+}
+
+// ❌ CANCEL EDIT
+function cancelEdit(id){
+    document.getElementById("edit-"+id).style.display = "none";
+    document.getElementById("view-"+id).style.display = "block";
+}
+
+// 💾 SAVE JOB
+function saveJob(id){
+    let job = jobs.find(j => j.id === id);
+
+    job.title = document.getElementById("title-"+id).value;
+    job.shop = document.getElementById("shop-"+id).value;
+    job.location = document.getElementById("location-"+id).value;
+    job.salary = document.getElementById("salary-"+id).value;
+
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+    renderJobs();
+}
+
+// 🗑 DELETE JOB
+function deleteJob(id){
+    if(confirm("Delete this job?")){
+        jobs = jobs.filter(j => j.id !== id);
+        localStorage.setItem("jobs", JSON.stringify(jobs));
+        renderJobs();
+    }
+}
+</script>
+
+</body>
+</html>
